@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import Feedback from "./Components/Feedback";
-import Options from "./Components/Options";
-import Notification from "./Components/Notification";
+import Feedback from "./components/Feedback";
+import Options from "./components/Options";
+import Notification from "./components/Notification";
 
 import "./App.css";
 
@@ -90,24 +90,3 @@ const App = () => {
 
 export default App;
 
-// function App() {
-//   const [count, setCount] = useState(0)
-
-//   return (
-//     <>
-//       <div>
-
-//       </div>
-
-//       <div className="card">
-//         <button onClick={() => setCount((count) => count + 1)}>
-//           count is {count}
-//         </button>
-//         <p>
-//           Edit <code>src/App.jsx</code> and save to test HMR
-//         </p>
-//       </div>
-
-//     </>
-//   )
-// }
