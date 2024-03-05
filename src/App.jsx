@@ -2,23 +2,27 @@ import { useState, useEffect } from "react";
 import Feedback from "./components/Feedback";
 import Options from "./components/Options";
 import Notification from "./components/Notification";
-
+import Description from "./components/Description";
 import "./App.css";
+
 
 const App = () => {
   // Функція для ініціалізації стану з локального сховища
-  const initializeStateFromLocalStorage = () => {
-    const savedState = JSON.parse(localStorage.getItem("feedbackState"));
-    if (savedState) {
-      setFeedbackTypes(savedState);
-    }
-  };
+   const initialFeedbackTypes = JSON.parse(
+     localStorage.getItem("feedbackTypes")
+   ) || {
+     good: 0,
+     neutral: 0,
+     bad: 0,
+   };
 
-  const [feedbackTypes, setFeedbackTypes] = useState({
-    good: 0,
-    neutral: 0,
-    bad: 0,
-  });
+  const [feedbackTypes, setFeedbackTypes] = useState(initialFeedbackTypes);
+  
+  useEffect(() => {
+    // Зберігаємо стан у localStorage кожен раз, коли він змінюється
+    localStorage.setItem("feedbackTypes", JSON.stringify(feedbackTypes));
+  }, [feedbackTypes]);
+
 
   const updateFeedback = (feedbackType) => {
     setFeedbackTypes((prevTypes) => ({
@@ -38,30 +42,10 @@ const App = () => {
   const totalFeedback =
     feedbackTypes.good + feedbackTypes.neutral + feedbackTypes.bad;
 
-  const positivePercentage =
-    totalFeedback > 0
-      ? Math.round(
-          ((feedbackTypes.good + feedbackTypes.neutral) / totalFeedback) * 100
-        )
-      : 0;
-
-  // Ефект для збереження стану у локальному сховищі при зміні
-  useEffect(() => {
-    localStorage.setItem("feedbackState", JSON.stringify(feedbackTypes));
-  }, [feedbackTypes]);
-
-  // Ефект для ініціалізації стану при завантаженні сторінки
-  useEffect(() => {
-    initializeStateFromLocalStorage();
-  }, []);
-
+  
   return (
     <div>
-      <h1>Sip Happens Café ☕</h1>
-      <p>
-        Please leave your feedback about our service by selecting one of the
-        options below.
-      </p>
+      <Description />
 
       {totalFeedback > 0 ? (
         <div className="container">
@@ -72,11 +56,10 @@ const App = () => {
               resetFeedback={resetFeedback}
             />
           </div>
-          <Feedback feedbackTypes={feedbackTypes} />
-          <p>Total Feedback: {totalFeedback}</p>
-          <p className="percent-text">
-            Positive Percentage: {positivePercentage}%
-          </p>
+          <Feedback
+            feedbackTypes={feedbackTypes}
+            totalFeedback={totalFeedback}
+          />
         </div>
       ) : (
         <div>
